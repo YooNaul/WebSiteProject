@@ -11,9 +11,14 @@ function validateForm(form) {
 		form.title.focus();
 		return false;
 	}
-	if (form.name.value == "") {
+	if (form.writer.value == "") {
 		alert("작성자를 입력하세요.");
-		form.name.focus();
+		form.writer.focus();
+		return false;
+	}
+	if (form.content.value == "") {
+		alert("내용을 입력하세요.");
+		form.content.focus();
 		return false;
 	}
 	if (form.postpass.value == "") {
@@ -21,9 +26,8 @@ function validateForm(form) {
 		form.postpass.focus();
 		return false;
 	}
-	if (form.content.value == "") {
-		alert("내용을 입력하세요.");
-		form.content.focus();
+	if (form.file.value == "") {
+		alert("첨부파일을 등록하세요.");
 		return false;
 	}
 }
@@ -47,7 +51,7 @@ function validateForm(form) {
 				</div>
 				<div>
 
- 		<form enctype="multipart/form-data" action="WriteProcess.jsp">
+ 		<form enctype="multipart/form-data" method="post" action="UploadProcess.jsp">
                 <table class="table table-bordered">
                 <colgroup>
                     <col width="20%"/>
@@ -66,7 +70,7 @@ function validateForm(form) {
                         <th class="text-center" 
                             style="vertical-align:middle;">작성자</th>
                         <td>
-                            <input type="text" class="form-control" name="name"/>
+                            <input type="text" class="form-control" name="writer"/>
                         </td>
                         <th class="text-center" 
                             style="vertical-align:middle;">비밀번호</th>
@@ -81,14 +85,21 @@ function validateForm(form) {
                             <textarea rows="5" class="form-control" name="content"></textarea>
                         </td>
                     </tr>
-                    
+                    <tr>
+                        <th class="text-center" 
+                            style="vertical-align:middle;">첨부파일</th>
+                        <td colspan="10">
+                            <input type="file" class="form-control" name="attachedFile"/>
+                        </td>
+                    </tr>
                 </tbody>
                 </table>
+
                 <!-- 각종버튼 -->
                 <div class="row mb-3">
                     <div class="col d-flex justify-content-end">
                     	<button type="submit" class="btn btn-danger" >작성완료</button>
-                        <button type="button" class="btn btn-warning" onclick="location.href='sub03.jsp';">목록보기</button>
+                        <button type="button" class="btn btn-warning" onclick="location.href='sub05.jsp';">목록보기</button>
                         <button type="reset" class="btn btn-dark">다시쓰기</button>
                     </div>
                 </div>

@@ -134,7 +134,7 @@ dao.close();
 			            <td align="left"> 
 			               	<a href="./sub01_view.jsp?idx=<%= dto.getIdx() %>"><%= dto.getTitle() %></a>
 			            </td>
-			            <td align="center"><%= dto.getName() %></td>        
+			            <td align="center"><%= dto.getWriter() %></td>        
 			            <td align="center"><%= dto.getPostdate() %></td> 
 			            <td align="center"><%= dto.getVisicount() %></td> 
 			        </tr>

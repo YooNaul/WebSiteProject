@@ -9,14 +9,15 @@
 //폼값 받기
 String title = request.getParameter("title");
 String content = request.getParameter("content");
-String name = request.getParameter("name");
+String writer = request.getParameter("writer");
+String postpass = request.getParameter("postpass");
 
 //사용자가 입력한 폼값을 저장하기 위해 DTO객체 생성
 BoardDTO dto = new BoardDTO();
 dto.setTitle(title);
 dto.setContent(content);
-dto.setName(name);
-
+dto.setWriter(writer);
+dto.setPostpass(postpass);
 
 //DAO객체 생성 및 DB연결
 BoardDAO dao = new BoardDAO(application);

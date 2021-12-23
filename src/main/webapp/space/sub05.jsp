@@ -1,3 +1,4 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="model1.board.BoardPage"%>
 <%@page import="model1.board.BoardDTO"%>
 <%@page import="java.util.List"%>
@@ -107,7 +108,7 @@ dao.close();
                     </tr>
                 </thead>
                 <tbody>
-
+	
                 <%
 				if (infoboardLists.isEmpty()) {
 					//게시물이 하나도 없을때
@@ -135,7 +136,7 @@ dao.close();
 			            <td align="left"> 
 			               	<a href="./sub01_view.jsp?idx=<%= dto.getIdx() %>"><%= dto.getTitle() %></a>
 			            </td>
-			            <td align="center"><%= dto.getName() %></td>        
+			            <td align="center"><%= dto.getWriter() %></td>        
 			            <td align="center"><%= dto.getPostdate() %></td> 
 			            <td align="center"><%= dto.getVisicount() %></td>
 			            <td><i class="bi-pin-angle-fill" style="font-size: 1rem;"></i></td>
@@ -149,9 +150,9 @@ dao.close();
                 </table>
             </div>
             <!-- 각종버튼 -->
-            <div class="row">
+            <div class="row" >
                 <div class="col d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" onclick="location.href='writeT.jsp';">글쓰기</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='sub05_infoboardwrite.jsp';">글쓰기</button>
 
                 </div>
             </div>

@@ -1,7 +1,9 @@
+<%@page import="java.net.URLEncoder"%>
 <%@page import="model1.board.BoardDTO"%>
 <%@page import="model1.board.BoardDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.2/dist/js/bootstrap.bundle.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.1/font/bootstrap-icons.css">
@@ -19,15 +21,6 @@ BoardDTO dto = dao.selectView(idx);
 dao.close();
 %>
 <script>
-function deletePost() {
-	var confirmed = confirm("정말로 삭제하겠습니까?");
-	if (confirmed) {
-		var form = document.writeFrm;
-		form.method = "post"; //전송방식을 post로 설정
-		form.action = "DeleteProcess.jsp"; //전송할 URL
-		form.submit();	//폼값 전송
-	}
-}
 </script>
 
  <body>
@@ -64,7 +57,7 @@ function deletePost() {
                         <th class="text-center" 
                             style="vertical-align:middle;">작성자</th>
                         <td>
-                            <%= dto.getName() %>
+                            <%= dto.getWriter() %>
                         </td>
                         <th class="text-center" 
                             style="vertical-align:middle;">작성일</th>
@@ -73,11 +66,6 @@ function deletePost() {
                         </td>
                     </tr>
                     <tr>
-                        <th class="text-center" 
-                            style="vertical-align:middle;">이메일</th>
-                        <td>
-                            YooNaul@BES.com
-                        </td>
                         <th class="text-center" 
                             style="vertical-align:middle;">조회수</th>
                         <td>
@@ -95,32 +83,30 @@ function deletePost() {
                         <th class="text-center" 
                             style="vertical-align:middle;">내용</th>
                         <td colspan="3">
-                            <%-- <%= dto.getContent().replace("\r\n", "<br/>") %> --%>
+                            <%= dto.getContent().replace("\r\n", "<br/>") %>
                         </td>
                     </tr>
                     <tr>
                         <th class="text-center" 
                             style="vertical-align:middle;">첨부파일</th>
+                        
                         <td colspan="3">
-                            파일명.jpg
+                        <% if(dto.getOfile() != null) { %>
+                            <a href="Download.jsp?oName=<%=URLEncoder.encode(dto.getOfile(),"UTF-8")%>&sName=<%=URLEncoder.encode(dto.getSfile(),"UTF-8")%>"><%= dto.getOfile() %></a>
+                       
+                        <%} %>
+                        
                         </td>
-                    </tr> 
+                    </tr>
                 </tbody>
                 </table>
 
                 <!-- 각종버튼 -->
                 <div class="row mb-3">
                     <div class="col d-flex justify-content-end">
-	                    <%
-			            if (session.getAttribute("UserId") != null
-			            	&& session.getAttribute("UserId").toString().equals(dto.getName()))	{
-			            %>
-                        <button type="button" class="btn btn-secondary" onclick="location.href='Edit.jsp?num=<%= dto.getIdx() %>';">수정하기</button>
-                        <button type="button" class="btn btn-success" onclick="deletePost();">삭제하기</button>
-                        <%
-			            }
-			            %>
-                        <button type="button" class="btn btn-warning" onclick="location.href='listT.jsp';">목록보기</button>
+                        <button type="button" class="btn btn-secondary" onclick="location.href='sub01_write.jsp?idx=<%= dto.getIdx() %>';">수정하기</button>
+                        <button type="button" class="btn btn-success" onclick="location.href='PassCheck.jsp?idx=<%= dto.getIdx() %>';">삭제하기</button>                  
+                        <button type="button" class="btn btn-warning" onclick="location.href='sub03.jsp';">목록보기</button>
                     </div>
                 </div>
             </form>

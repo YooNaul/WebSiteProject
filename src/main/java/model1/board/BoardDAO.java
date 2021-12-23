@@ -47,24 +47,35 @@ public class BoardDAO extends JDBConnect {
 		
 		return totalCount;
 	}
-	//공지사항게시판 출력실행 쿼리문
+	//공지게시판 출력실행 쿼리문
 	public List<BoardDTO> noticeList(Map<String, Object> map){
 		
 		List<BoardDTO> bbs = new Vector<BoardDTO>();
 		
 		
-		String query = "SELECT * FROM proboard WHERE tablename="
-				+ " 'notice' ";
+		String query = "SELECT * FROM ( "
+				+ "    		SELECT Tb.*, ROWNUM rNum FROM ( "
+				+ "				SELECT * FROM proboard WHERE tablename='notice' ";
 		//검색어가 있는 경우 where절을 추가한다.
 		if (map.get("searchWord") != null) {
 			query += " WHERE " + map.get("searchField") + " "
 					+ " LIKE '%" +map.get("searchWord") + "%'";
 		}
-		query += " ORDER BY idx DESC ";
+			query += " 		ORDER BY idx DESC "
+				+ "	  ) Tb "
+				+ " ) "
+				+ "	WHERE rNum BETWEEN ? AND ?";
 		
 		try {
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(query);
+			
+			//쿼리 실행을 위한 prepared객체 생성
+			psmt = con.prepareStatement(query);
+			//인파라미터설정 : 구간을 위한 start, end를 설정
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+		
+			
+			rs = psmt.executeQuery();
 			
 			//추출된 결과에 따라 반복한다.
 			while (rs.next()) {
@@ -72,15 +83,16 @@ public class BoardDAO extends JDBConnect {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setIdx(rs.getString("idx"));
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setTablename(rs.getString("tablename"));
 				dto.setOfile(rs.getString("ofile"));
 				dto.setSfile(rs.getString("sfile"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setVisicount(rs.getString("visicount"));
-				dto.setDowncount(rs.getString("downcount"));
+				dto.setVisicount(rs.getInt("visicount"));
+				dto.setDowncount(rs.getInt("downcount"));
+				dto.setPostpass(rs.getString("postpass"));
 				
 				
 				//리스트 컬렉션에 DTO객체를 추가한다.
@@ -101,18 +113,29 @@ public class BoardDAO extends JDBConnect {
 		List<BoardDTO> bbs = new Vector<BoardDTO>();
 		
 		
-		String query = "SELECT * FROM proboard WHERE tablename="
-				+ " 'freeboard' ";
+		String query = "SELECT * FROM ( "
+				+ "    		SELECT Tb.*, ROWNUM rNum FROM ( "
+				+ "				SELECT * FROM proboard WHERE tablename='freeboard' ";
 		//검색어가 있는 경우 where절을 추가한다.
 		if (map.get("searchWord") != null) {
 			query += " WHERE " + map.get("searchField") + " "
 					+ " LIKE '%" +map.get("searchWord") + "%'";
 		}
-		query += " ORDER BY idx DESC ";
+		query += " 		ORDER BY idx DESC "
+				+ "	  ) Tb "
+				+ " ) "
+				+ "	WHERE rNum BETWEEN ? AND ?";
 		
 		try {
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(query);
+			
+			//쿼리 실행을 위한 prepared객체 생성
+			psmt = con.prepareStatement(query);
+			//인파라미터설정 : 구간을 위한 start, end를 설정
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+		
+			
+			rs = psmt.executeQuery();
 			
 			//추출된 결과에 따라 반복한다.
 			while (rs.next()) {
@@ -120,15 +143,16 @@ public class BoardDAO extends JDBConnect {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setIdx(rs.getString("idx"));
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setTablename(rs.getString("tablename"));
 				dto.setOfile(rs.getString("ofile"));
 				dto.setSfile(rs.getString("sfile"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setVisicount(rs.getString("visicount"));
-				dto.setDowncount(rs.getString("downcount"));
+				dto.setVisicount(rs.getInt("visicount"));
+				dto.setDowncount(rs.getInt("downcount"));
+				dto.setPostpass(rs.getString("postpass"));
 				
 				
 				//리스트 컬렉션에 DTO객체를 추가한다.
@@ -148,18 +172,29 @@ public class BoardDAO extends JDBConnect {
 		List<BoardDTO> bbs = new Vector<BoardDTO>();
 		
 		
-		String query = "SELECT * FROM proboard WHERE tablename="
-				+ " 'picboard' ";
+		String query = "SELECT * FROM ( "
+				+ "    		SELECT Tb.*, ROWNUM rNum FROM ( "
+				+ "				SELECT * FROM proboard WHERE tablename='picboard' ";
 		//검색어가 있는 경우 where절을 추가한다.
 		if (map.get("searchWord") != null) {
 			query += " WHERE " + map.get("searchField") + " "
 					+ " LIKE '%" +map.get("searchWord") + "%'";
 		}
-		query += " ORDER BY idx DESC ";
+		query += " 		ORDER BY idx DESC "
+				+ "	  ) Tb "
+				+ " ) "
+				+ "	WHERE rNum BETWEEN ? AND ?";
 		
 		try {
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(query);
+			
+			//쿼리 실행을 위한 prepared객체 생성
+			psmt = con.prepareStatement(query);
+			//인파라미터설정 : 구간을 위한 start, end를 설정
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+		
+			
+			rs = psmt.executeQuery();
 			
 			//추출된 결과에 따라 반복한다.
 			while (rs.next()) {
@@ -167,15 +202,16 @@ public class BoardDAO extends JDBConnect {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setIdx(rs.getString("idx"));
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setTablename(rs.getString("tablename"));
 				dto.setOfile(rs.getString("ofile"));
 				dto.setSfile(rs.getString("sfile"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setVisicount(rs.getString("visicount"));
-				dto.setDowncount(rs.getString("downcount"));
+				dto.setVisicount(rs.getInt("visicount"));
+				dto.setDowncount(rs.getInt("downcount"));
+				dto.setPostpass(rs.getString("postpass"));
 				
 				
 				//리스트 컬렉션에 DTO객체를 추가한다.
@@ -195,18 +231,29 @@ public class BoardDAO extends JDBConnect {
 		List<BoardDTO> bbs = new Vector<BoardDTO>();
 		
 		
-		String query = "SELECT * FROM proboard WHERE tablename="
-				+ " 'infoboard' ";
+		String query = "SELECT * FROM ( "
+				+ "    		SELECT Tb.*, ROWNUM rNum FROM ( "
+				+ "				SELECT * FROM proboard WHERE tablename='infoboard' ";
 		//검색어가 있는 경우 where절을 추가한다.
 		if (map.get("searchWord") != null) {
 			query += " WHERE " + map.get("searchField") + " "
 					+ " LIKE '%" +map.get("searchWord") + "%'";
 		}
-		query += " ORDER BY idx DESC ";
+		query += " 		ORDER BY idx DESC "
+				+ "	  ) Tb "
+				+ " ) "
+				+ "	WHERE rNum BETWEEN ? AND ?";
 		
 		try {
-			stmt = con.createStatement();
-			rs = stmt.executeQuery(query);
+			
+			//쿼리 실행을 위한 prepared객체 생성
+			psmt = con.prepareStatement(query);
+			//인파라미터설정 : 구간을 위한 start, end를 설정
+			psmt.setString(1, map.get("start").toString());
+			psmt.setString(2, map.get("end").toString());
+		
+			
+			rs = psmt.executeQuery();
 			
 			//추출된 결과에 따라 반복한다.
 			while (rs.next()) {
@@ -214,15 +261,16 @@ public class BoardDAO extends JDBConnect {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setIdx(rs.getString("idx"));
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setTablename(rs.getString("tablename"));
 				dto.setOfile(rs.getString("ofile"));
 				dto.setSfile(rs.getString("sfile"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setVisicount(rs.getString("visicount"));
-				dto.setDowncount(rs.getString("downcount"));
+				dto.setVisicount(rs.getInt("visicount"));
+				dto.setDowncount(rs.getInt("downcount"));
+				dto.setPostpass(rs.getString("postpass"));
 				
 				
 				//리스트 컬렉션에 DTO객체를 추가한다.
@@ -236,6 +284,7 @@ public class BoardDAO extends JDBConnect {
 		
 		return bbs;
 	}
+	
 	/*
 	목록에 출력할 게시물을 오라클로부터 추출하기 위한 쿼리문 실행 (페이지 처리 없음)
 	 */
@@ -270,15 +319,15 @@ public class BoardDAO extends JDBConnect {
 				BoardDTO dto = new BoardDTO();
 				
 				dto.setIdx(rs.getString("idx"));
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setTablename(rs.getString("tablename"));
 				dto.setOfile(rs.getString("ofile"));
 				dto.setSfile(rs.getString("sfile"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setVisicount(rs.getString("visicount"));
-				dto.setDowncount(rs.getString("downcount"));
+				dto.setVisicount(rs.getInt("visicount"));
+				dto.setDowncount(rs.getInt("downcount"));
 				
 				
 				//리스트 컬렉션에 DTO객체를 추가한다.
@@ -302,7 +351,7 @@ public class BoardDAO extends JDBConnect {
 		try {
 			//인파라미터가 있는 쿼리문 작성(동적쿼리문)
 			String query = "INSERT INTO proboard ( "
-					+ " idx,name,title,content,tablename,postdate,visicount) "
+					+ " idx,writer,title,content,tablename,postdate,visicount) "
 					+ " VALUES ( "
 					+ " seq_proboard.NEXTVAL, ?, ?, ?, 'freeboard', sysdate, 0)";
 			//동적쿼리문 실행을 위해 prepared객체 생성
@@ -310,7 +359,7 @@ public class BoardDAO extends JDBConnect {
 			//순서대로 인파라미터 설정
 			psmt.setString(1, dto.getTitle());
 			psmt.setString(2, dto.getContent());
-			psmt.setString(3, dto.getName());
+			psmt.setString(3, dto.getWriter());
 			//쿼리문 실행 : 입력에 성공한다면 1이 반환된다. 실패시 0반환
 			result = psmt.executeUpdate();
 		}
@@ -322,26 +371,26 @@ public class BoardDAO extends JDBConnect {
 		return result;
 	}
 	//상세보기를 위해 특정 일련번호에 해당하는 게시물을 인출한다.
-	public BoardDTO selectView(String num) {
+	public BoardDTO selectView(String idx) {
 		BoardDTO dto = new BoardDTO();
-		//join을 이용해서 member테이블의 name컬럼까지 가져온다.
-		String query = "SELECT b.*, M.name "
-				+ " FROM user_info M INNER JOIN proboard B "
-				+ " ON M.name=B.name "
-				+ " WHERE idx=?";
+		//join을 이용해서 user_info테이블의 name컬럼을 가져온다.
+		String query = " SELECT * FROM proboard where idx=? ";
 		
 		try {
 			psmt = con.prepareStatement(query);
-			psmt.setString(1, num);
+			psmt.setString(1, idx);
 			rs = psmt.executeQuery();
 			//일련번호는 중복되지 않으므로 if문에서 처리하면 된다.
 			if (rs.next()) {//ResultSet에서 커서를 이동시켜 레코드를 읽은 후
 				// DTO객체에 레코드의 내용을 추가한다.
-				dto.setIdx(query);
+				dto.setIdx(rs.getString(1));
 				dto.setTitle(rs.getString(2));
 				dto.setContent(rs.getString("content"));
 				dto.setPostdate(rs.getDate("postdate"));//날짜타입이므로 getDate()사용함.
-				dto.setName(rs.getString("name"));
+				dto.setWriter(rs.getString("writer"));
+				dto.setOfile(rs.getString("ofile"));
+				dto.setSfile(rs.getString("sfile"));
+				dto.setVisicount(rs.getInt("visicount"));
 			}
 		}
 		catch (Exception e) {
@@ -451,8 +500,8 @@ public class BoardDAO extends JDBConnect {
 				dto.setTitle(rs.getString("title"));
 				dto.setContent(rs.getString("content"));
 				dto.setPostdate(rs.getDate("postdate"));
-				dto.setName(rs.getString("name"));
-				dto.setVisicount(rs.getString("visicount"));
+				dto.setWriter(rs.getString("writer"));
+				dto.setVisicount(rs.getInt("visicount"));
 				
 				bbs.add(dto);
 			}
@@ -464,4 +513,138 @@ public class BoardDAO extends JDBConnect {
 		
 		return bbs;
 	}
+	
+	//파일 및 게시물 입력
+		public int insertFile(BoardDTO dto) {
+			int applyResult = 0;
+			try {
+				//1.쿼리문 작성
+				String query = "INSERT INTO proboard ( "
+						+ "	idx, writer, title, content, tablename, ofile, sfile, postdate, visicount, downcount, postpass  ) "
+						+ " VALUES ( "
+						+ " seq_proboard.nextval, ?, ?, ?, 'infoboard', ?, ?, sysdate, 0, 0, ?) ";
+				//2.prepared객체생성 및 인파라미터 설정
+				psmt = con.prepareStatement(query);
+				psmt.setString(1, dto.getWriter());
+				psmt.setString(2, dto.getTitle());
+				psmt.setString(3, dto.getContent());
+				psmt.setString(4, dto.getOfile());
+				psmt.setString(5, dto.getSfile());
+				psmt.setString(6, dto.getPostpass());
+				//3.쿼리실행
+				applyResult = psmt.executeUpdate();
+			}
+			catch (Exception e) {
+				System.out.println("INSERT중 예외 발생");
+				e.printStackTrace();
+			}
+			return applyResult;
+		}
+		//파일 및 게시물 입력
+		public int insertPicFile(BoardDTO dto) {
+			int applyResult = 0;
+			try {
+				//1.쿼리문 작성
+				String query = "INSERT INTO proboard ( "
+						+ "	idx, writer, title, content, tablename, ofile, sfile, postdate, visicount, downcount, postpass  ) "
+						+ " VALUES ( "
+						+ " seq_proboard.nextval, ?, ?, ?, 'picboard', ?, ?, sysdate, 0, 0, ?) ";
+				//2.prepared객체생성 및 인파라미터 설정
+				psmt = con.prepareStatement(query);
+				psmt.setString(1, dto.getWriter());
+				psmt.setString(2, dto.getTitle());
+				psmt.setString(3, dto.getContent());
+				psmt.setString(4, dto.getOfile());
+				psmt.setString(5, dto.getSfile());
+				psmt.setString(6, dto.getPostpass());
+				//3.쿼리실행
+				applyResult = psmt.executeUpdate();
+			}
+			catch (Exception e) {
+				System.out.println("INSERT중 예외 발생");
+				e.printStackTrace();
+			}
+			return applyResult;
+		}
+		
+		//파일 목록 출력
+		public List<BoardDTO> myFileList() {
+			List<BoardDTO> fileList = new Vector<BoardDTO>();
+			
+			//레코드를 일련번호의 내림차순으로 정렬
+			String query = "SELECT * FROM proboard ORDER BY idx DESC";
+			try {
+				psmt = con.prepareStatement(query);
+				rs = psmt.executeQuery();
+				//ResultSet의 객체수만큼 반복
+				while (rs.next()) {
+					BoardDTO dto = new BoardDTO();
+					dto.setIdx(rs.getString(1));
+					dto.setWriter(rs.getString(2));
+					dto.setTitle(rs.getString(3));
+					dto.setTablename(rs.getString(4));
+					dto.setOfile(rs.getString(5));
+					dto.setSfile(rs.getString(6));
+					dto.setPostdate(rs.getDate(7));
+					//각 레코드를 List컬렉션에 추가
+					fileList.add(dto);
+				}
+			}
+			catch (Exception e) {
+				System.out.println("SELECT시 예외 발생");
+				e.printStackTrace();
+			}
+			return fileList;
+		}
+		
+		
+		//패스워드 검증을 위해 해당 게시물이 존재하는지 확인
+		public boolean confirmPassword(String pass, String idx) {
+			boolean isCorr = true;
+			try {
+				//패스워드와 일련번호를 통해 조건에 맞는 게시물이 있는지 확인
+				String sql = "SELECT COUNT(*) FROM proboard WHERE postpass=? AND idx=?";
+				psmt = con.prepareStatement(sql);
+				//인파라미터 설정
+				psmt.setString(1, pass);
+				psmt.setString(2, idx);
+				rs = psmt.executeQuery();
+				//커서 이동을 위한 next() 호출. count() 함수는 항상 결과를 반환하므로
+				//if문은 별도로 필요하지 않다.
+				rs.next();
+				if (rs.getInt(1) == 0) {//결과가 없을때 false로 처리
+					isCorr = false;
+				}
+			}
+			catch(Exception e) {
+				isCorr = false;//예외가 발생하면 확인이 안되므로 false로 처리
+				e.printStackTrace();
+			}
+			return isCorr;
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 }

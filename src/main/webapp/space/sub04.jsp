@@ -1,9 +1,10 @@
+<%@page import="java.io.File"%>
+<%@page import="model1.board.BoardPage"%>
 <%@page import="model1.board.BoardDTO"%>
 <%@page import="java.util.List"%>
-<%@page import="model1.board.BoardDAO"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="java.util.Map"%>
-<%@page import="utils.BoardPage"%>
+<%@page import="model1.board.BoardDAO"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ include file="../include/global_head.jsp" %>
@@ -31,7 +32,7 @@ int totalCount = dao.selectCount(param);
 
 /*** 페이지 처리 start ***/
 //컨텍스트 초기화 파라미터를 얻어온 후 사칙연산을 위해 정수로 변경한다.
-int pageSize = Integer.parseInt(application.getInitParameter("POSTS_PER_PAGE"));
+int pageSize = 6;
 int blockPage = Integer.parseInt(application.getInitParameter("PAGES_PER_BLOCK"));
 //전체 페이지 수를 계산한다.
 int totalPage = (int)Math.ceil((double)totalCount / pageSize);
@@ -53,12 +54,13 @@ param.put("end", end);
 
 
 //출력할 레코드 추출
-List<BoardDTO> picboardLists = dao.picboardList(param);
+List<BoardDTO> picboardList = dao.picboardList(param);
+
+
 //자원 해제
 
 dao.close();
 %>
-
 
  <body>
 	<center>
@@ -74,8 +76,8 @@ dao.close();
 			</div>
 			<div class="right_contents">
 				<div class="top_title">
-					<img src="../images/space/sub04_title.gif" alt="사진게시판" class="con_title" />
-					<p class="location"><img src="../images/center/house.gif" />&nbsp;&nbsp;열린공간&nbsp;>&nbsp;사진게시판<p>
+					<img src="../images/space/sub03_title.gif" alt="자유게시판" class="con_title" />
+					<p class="location"><img src="../images/center/house.gif" />&nbsp;&nbsp;열린공간&nbsp;>&nbsp;자유게시판<p>
 				</div>
 				<!-- 검색 -->
             <div class="row">
@@ -92,24 +94,9 @@ dao.close();
                         </button>
                     </div>
                 </form>
-            </div>
-            <!-- 게시판 리스트 -->
-            <div class="row mt-3 mx-1">
-                <table class="table table-bordered table-hover table-striped">
-                <thead>
-                    <tr class="text-center">
-                        <th>번호</th>
-                        <th>제목</th>
-                        <th>작성자</th>
-                        <th>작성일</th>
-                        <th>조회수</th>
-                        <!-- <th>첨부</th> -->
-                    </tr>
-                </thead>
-                <tbody>
-
-                <%
-				if (picboardLists.isEmpty()) {
+            </div>            
+            <%
+				if (picboardList.isEmpty()) {
 					//게시물이 하나도 없을때
 				%>
 					<tr>
@@ -124,33 +111,43 @@ dao.close();
 					int virtualNum = 0;//게시물의 출력 번호
 					int countNum = 0;
 					//확장 for문을 통해 List컬렉션에 저장된 레코드의 개수만큼 반복한다.
-					for (BoardDTO dto : picboardLists)
+					for (BoardDTO dto : picboardList)
 					{
 						//전체 레코드 수를 1씩 차감하면서 번호를 출력
 						//virtualNum = totalCount--;
 						virtualNum = totalCount - (((pageNum - 1) * pageSize) + countNum++);
 				%>
-			        <tr align="center">
-			            <td><%= virtualNum %></td> 
-			            <td align="left"> 
-			               	<a href="./sub01_view.jsp?idx=<%= dto.getIdx() %>"><%= dto.getTitle() %></a>
-			            </td>
-			            <td align="center"><%= dto.getName() %></td>        
-			            <td align="center"><%= dto.getPostdate() %></td> 
-			            <td align="center"><%= dto.getVisicount() %></td> 
-			        </tr>
+			        <!-- 게시판 리스트 -->
+            <div class="col-md-4" style="border: 1px solid gold; float: left; width: 33%;">
+                  <div class="thumbnail mb-4 p-1 border" style="height:230px;">
+                     <a href="./sub01_view.jsp?idx=<%= dto.getIdx() %>">
+                        <img src="../Uploads/<%= dto.getSfile() %>" style="max-width:220px; max-height:220px;">
+                        <div class="caption">
+                           <p>
+                              <a href="./sub01_view.jsp?idx=<%= dto.getIdx() %>">
+                                 <tr align="center">
+                                 	<td>
+                                 		 <th class="text-center"><%= dto.getWriter() %></th>        
+			            				 <th class="text-center"><%= dto.getPostdate() %></th>
+			            				 <th class="text-center"><%= dto.getVisicount() %></th>
+                                 	</td>
+                                 </tr>
+                              </a>
+                           </p>
+                        </div>
+                     </a>
+                  </div>
+               </div>
 				<%
 					}
 				}
-				%>                   
-                    
-                </tbody>
-                </table>
-            </div>
-            <!-- 각종버튼 -->
-            <div class="row">
+				%>          
+            </div> 
+			<!-- 각종버튼 -->
+			
+            <div class="row" style="position: absolute; right: 180px; bottom: 150px;">
                 <div class="col d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" onclick="location.href='sub01_write.jsp';">글쓰기</button>
+                    <button type="button" class="btn btn-primary" onclick="location.href='sub04_picwrite.jsp';">글쓰기</button>
 
                 </div>
             </div>
@@ -163,15 +160,11 @@ dao.close();
                     </ul>
                 </div>
             </div>
-        </div>
-    </div>
-			</div>
-		</div>
 		<%@ include file="../include/quick.jsp" %>
 	</div>
-	
 
 	<%@ include file="../include/footer.jsp" %>
 	</center>
  </body>
 </html>
+
